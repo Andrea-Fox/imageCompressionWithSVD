@@ -47,20 +47,15 @@ We are going to use a convolutional network to obtain, for each pixel, a value b
 
 ### How to compute the importance of each pixel
 
-1. we discard the classes whose learned features do not have a sufficiently large total activation function summed across all features and across the entire image: 
-   $$
-   Z_{l}^c = \sum_{d \in D} \sum_{x, y} f_d^c (x, y)
-   $$
+1. we discard the classes whose learned features do not have a sufficiently large total activation function summed across all features and across the entire image:  
+   ![](images/formulas/formula_importance_matrix_1.png)
 
-2. we compute the multi-structure region of interest as follows: 
-$$
-   \hat{I} (x, y) = \sum_{c \in C} \begin{cases}
-       \sum_d f_d^c (x, y) \quad &\text{if } Z_{l}^c > T \\
-       0 & \text{otherwise}
-       \end{cases}
-   $$
+2. we compute the multi-structure region of interest as follows:  
+![](images/formulas/formula_importance_matrix.png)
+
 
 ### Example of importance matrix
+In this images we see, on the left the original image and on the right its corresponding *importance\_matrix*, represented through an heatmap.
 <p float="left">
   <img src="images/overlayed_heatmap_zones_grid.png" width="300" />
   <img src="images/overlayed_heatmap_grid.png" width="300" /> 
