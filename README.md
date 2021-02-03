@@ -100,9 +100,7 @@ The final code is able to address both
 
 - depends on the value of the quality desired
 
-- $\begin{aligned}
-  n = \lfloor \frac{46}{9} * q + \frac{26}{9} \rfloor
-  \end{aligned}$
+- ![](images/formulas/formula_n.png)
 
 - *q = 10* implies *n = 56*, hence each zone in the importance matrix will be a matrix *4 \* 4*
 
@@ -113,13 +111,15 @@ The final code is able to address both
 ### Computation of the importance of each zone
 
 - *k =  224/n(q)*, side of each zone of the importance matrix
-- $
-  I_{i,j} =  mean( importance\_matrix( (i-1)*k +1 : i*k), (j-1)*k +1:j*k )
-  $
+- *I_{i,j} =  mean( importance\_matrix( (i-1)\*k +1 : i\*k), (j-1)\*k +1:j\*k )*
 
 The following image represents how the importance of each pixel translates into the way we compute the importance of each zone.
 
-IMMAGINE CON IMPORTANZA DELLE DUE ZONE
+<p float="left">
+  <img src="images/overlayed_heatmap_grid.png" width="300" />
+  <img src="images/overlayed_heatmap_zones_grid.png" width="300" /> 
+</p>
+
 
 
 
@@ -140,55 +140,49 @@ Properties of the desired function which assign a multilinear rank proportional 
 - as *q* increases, at first only important part have an higher rank, while non-important part maintain a small rank
 - with high values of *q*, both the important zones and the less important have a multilinear rank close to half the actual size of the zone
 
-The following image represents an image with these properties
+The following image represents a function with these properties:
 
-IMMAGINE DELLA FUNZIONE
+<p float="center">
+  <img src="images/grafico_q1.png" width="200" />
+  <img src="images/grafico_q5.png" width="200" /> 
+  <img src="images/grafico_q10.png" width="200" /> 
+</p>
+These images have, on the x-axis the importance of the zone (value between 0 and 1) and in the y-axis the ratio between the rank in the SVD and the size of the image.  
+
 
 The goal of the algorithm is to have an higher quality in zones with higher value of the importance matrix:\
 
 Let 
-$$
-m(q) = \frac{\text{dimension of the image}}{n(q)} = \frac{\text{dimension of the image}}{\frac{46}{9}q + \frac{26}{9}}
-$$
+![](images/formulas/formula_m_q.png)
 
 
 then, the value of the rank assigned to zone *(i, j)* is going to be the following: 
-$$
-\begin{align*}
-    rank(i, j) =& \ rank( I(i, j), q) = \\ 
-     =& \left( - q^2 \frac{3}{40} + q \frac{33}{40} - \frac{1}{4}   \right) \left( \frac{m}{8} \tanh \left( 2 (I(i,j) - 0.5) \right) + \frac{m}{8}\right) + \\
-    & + \mathbb{I}_{(q>5)} \frac{m}{4} \frac{(q - 5)^2}{10} \\\\
-    =& a(q) \ f(q, I(i, j))  + \ g(q)
-\end{align*}
-$$
+
+![](images/formulas/formula_rank_1.png)
+
+
 This function has two important properties: the ratio between rank of the most important zones and the size *m*, as well as the ratio between the rank of the least important zones and *m*, are increasing functions. This means that the overall visual quality of both important zones and least important zones is increasing as q increases.  
 
 In the following graph, in blue is represented the first ratio, while in green is the other one.
 
-
-
-IMMAGINE RATIOS
+<p float="center">
+  <img src="images/quality_image_as_q_increases.png" width="500" />
+</p>
 
 
 
 #### Second approach: rank obtained by looking at the singular values of the tensor
 
-First, we need to look at the singular values and choose an appropriate target rank for the core tensor:  will be considered only singular values which are higher than the smallest of the third dimension (where we have to mantain the same dimension)
+First, we need to look at the singular values and choose an appropriate target rank for the core tensor:  will be considered only singular values which are higher than the smallest of the third dimension, where we have to mantain the same dimension. 
 
 The image below is a representation of the singular values of one zone in a test image; the results would be very similar with all the zones. On the right we have a visual representation of the singular values we are going to choose.
+<p float="center">
+  <img src="images/singular_values_grey.jpg" width="500" />
+</p>
 
 To obtain the final size of the tensor rank for each zone:
-$$
-\begin{align*}
-        rank(i, j) =& \ rank(I(i, j), q) \\
-        =& \left[ \frac{1}{2} \left( - \frac{q^2}{20} + \frac{11}{20} q - \frac{1}{2} \right) \tanh(I(i, j) - 0.5 ) + \left( \frac{q}{10} \right)^2 \right] \cdot optimal\_rank
-    \end{align*}
-$$
+![](images/formulas/formula_rank_2.png)
 where *optimal\_rank* represents the vector of size 3 containing the number of singular values which are higher than the smallest of the third dimension.
-
-
-
-
 
 ### Compression of the image
 
@@ -196,9 +190,22 @@ where *optimal\_rank* represents the vector of size 3 containing the number of s
 2. each zone can be represented through a tensor of size *m \* m \* 3* with *m= (image\_size)/n*
 3. we compute the approximation of the tensor of each zone, using sequentially truncated HOSVD on each zone setting a target multilinear rank of *(rank(i, j), rank(i,j), 3)*
 
-
-
-ESEMPIO CON IMMAGINE, HEATMAP E LA COMPRESSIONE PER DIVERSI LIVELLI
+In the following images we can see:
+- in the first row, the original image and the heatmap representation of its importance matrix
+- in the second row, the image compressed with quality 1 (left) and 5 (right)
+- in the last row, the image compressed with quality 8 (left) and 10 (right)
+<p float="center">
+  <img src="images/example_image.png" width="300" />
+  <img src="images/overlayed_heatmap_example.png" width="300" /> 
+</p>
+<p float="center">
+  <img src="images/quality1.png" width="300" />
+  <img src="imagesquality5.png" width="300" /> 
+</p>
+<p float="center">
+  <img src="images/quality8.png" width="300" />
+  <img src="images/quality10.png" width="300" /> 
+</p>
 
 
 
@@ -206,32 +213,36 @@ ESEMPIO CON IMMAGINE, HEATMAP E LA COMPRESSIONE PER DIVERSI LIVELLI
 
 We are now going to compare the performances of the two different methods using different qualities measures. The example dataset is going to be the *Kodak dataset*, which contains images of both natural and man-made objects, as well as people. The images are going to be of every shape.
 
-TRE IMMAGINI DI ESEMPIO
+<p float="left">
+  <img src="images/immagine_1_kodak.png" width="300" />
+  <img src="images/immagine_2_kodak.png" width="150" />
+  <img src="images/immagine_3_kodak.png" width="300" />
+</p>
 
 ### Measure 1: Peak signal-to-noise ratio (PSNR)
 
 Given two images, the original (O) and the compressed (C), both represented as tensors in *n1 \* n2 \* 3*
 
 The value is going to be 
-$$
-PSNR = 10 \log_{10} \left( \frac{256^2}{MSE} \right)
-$$
+<p float="left">
+  <img src="images/formulas/formula_psnr.png" width="300" />
+</p>
 where 
-$$
-MSE = \frac{1}{n_1  n_2  3} \sum_{i=1}^{n_1} \sum_{j=1}^{n_2} \sum_{k=1}^3 \left( O(i, j, k) - C(i, j, k) \right)^2
-$$
+<p float="left">
+  <img src="images/formulas/formula_mse.png" width="300" />
+</p>
 
 
 ### Structural similarity index measure (SSIM)
 
 Based on the idea that the pixels have strong inter-dependencies when they are spatially close. The SSIM index is calculated on various windows of an image. The measure between two windows x (in the original image) and y (in the compressed one) of common size N×N is defined as
-$$
-SSIM(x, y) = \frac{\left( 2 \mu_x \mu_y + c_1 \right) \left( 2 \sigma_{xy} + c_2 \right)}{\left( \mu_x^2 + \mu_y^2 + c_1 \right) \left( \sigma_x^2 + \sigma_y^2 + c_2 \right)}
-$$
+<p float="left">
+  <img src="images/formulas/formula_ssim.png" width="300" />
+</p>
 with 
-$$
-c_1 = (0.01 L)^2, c_2 = (0.03 L)^2, L = 2^{\#\text{bits per pixel}} -1
-$$
+<p float="left">
+  <img src="images/formulas/formula_ssim_constants.png" width="300" />
+</p>
 It is a value between -1 and 1, with 1 indicating two identical images, 0 indicates no structural similarities.
 
 
