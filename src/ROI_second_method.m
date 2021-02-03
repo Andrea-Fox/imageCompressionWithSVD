@@ -1,10 +1,11 @@
 clear all
 
 %% upload of the original image and its heatmap
-image = 'immagine_7'
-filename = [image, '/immagine_prova.png'];
+
+filename = 'immagine_prova.png';
 original_image = imread(filename);
 original_image = double(original_image);
+importance_matrix = readtable(/roi_map.csv', 'ReadVariableNames',0 );
 quality = 0;
 while(quality<1 || quality > 10)
     quality = input('What quality of compression you require? \n(1= high compression rate, low quality, 10 = high quality, low compression rate):  ');
@@ -24,7 +25,7 @@ elseif (original_size(1) > original_size(2) )
     new_original_image(:, (missing_columns+1): original_size(1), :) = original_image;
     original_image = new_original_image;
 end
-importance_matrix = readtable([image, '/roi_map.csv'], 'ReadVariableNames',0 );
+
 importance_matrix = importance_matrix{:, :};
 size_importance_map = length(importance_matrix(1, :));
 
@@ -135,7 +136,7 @@ end
 %end
 
 %% vanno trovati i ranghi adatti a ciascuna zona, mettendo in relazione la dimensione (area_size) e l'importanza di ciascuna zona
-% il rango sarà solo il rango ottimale moltiplicato per l'importanza della
+% il rango sarÃ  solo il rango ottimale moltiplicato per l'importanza della
 % zona
 
 %% si applica la hosvd a ciascuna zona, usando i ranghi precedentemente stabiliti
@@ -184,5 +185,5 @@ if (abs(original_size(1) - original_size(2)) > 0)
     compressed_image = compressed_image((max_size - original_size(1) + 1):max_size, (max_size - original_size(2) + 1):max_size, :);
 end
 imshow(uint8(compressed_image))
-imwrite(uint8(compressed_image), [image, '/compressed_image_ROI_rnd_q10.png']);
+imwrite(uint8(compressed_image),  '/compressed_image_ROI_first_method.png');
 
