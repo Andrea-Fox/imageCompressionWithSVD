@@ -1,8 +1,7 @@
 clc;
 clear all;
-folder = 'kodak_dataset/image_';
-image = int2str(1);
-filename = [folder, image, '/original_image.png'];
+
+filename = '/original_image.png';
 I = imread(filename);
 fileinfo = dir(filename);
 size_original_image = fileinfo(1).bytes;
@@ -191,7 +190,7 @@ compressed_image = cat(3, red2, green2, blue2);
 compressed_image = uint8(compressed_image);
 
 imshow(compressed_image);
-compressed_file_name = [folder, image, '/compressed_image_jpeg.png'];
+compressed_file_name = 'compressed_image_jpeg.png';
 imwrite(compressed_image, compressed_file_name);
 compressed_fileinfo = dir(compressed_file_name);
 size_compressed_image = compressed_fileinfo(1).bytes;
