@@ -33,7 +33,7 @@ We are going to use a convolutional network to obtain, for each pixel, a value b
 
 
 
-IMMAGINE NEURAL NETWORK
+![](images/Typical_cnn.png)
 
 
 
@@ -53,20 +53,18 @@ IMMAGINE NEURAL NETWORK
    $$
 
 2. we compute the multi-structure region of interest as follows: 
-
-3. $$
+$$
    \hat{I} (x, y) = \sum_{c \in C} \begin{cases}
        \sum_d f_d^c (x, y) \quad &\text{if } Z_{l}^c > T \\
        0 & \text{otherwise}
        \end{cases}
    $$
 
-4. 
-
 ### Example of importance matrix
-
-IMMAGINI AFFIANCATE IMPORTANCE MATRIX
-
+<p float="left">
+  <img src="images/overlayed_heatmap_zones_grid.png" width="300" />
+  <img src="images/overlayed_heatmap_grid.png" width="300" /> 
+</p>
 
 
 ## Going from the importance matrix to the compressed image
