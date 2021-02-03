@@ -1,10 +1,10 @@
 clear all
 
 %% upload of the original image and its heatmap
-image = 'immagine_1'
-filename = [image, '/immagine_prova.png'];
+filename = '/immagine_prova.png';
 original_image = imread(filename);
 original_image = double(original_image);
+importance_matrix = readtable('/roi_map.csv', 'ReadVariableNames',0 );
 
 max(max(original_image))
 min(min(original_image))
@@ -29,7 +29,7 @@ elseif (original_size(1) > original_size(2) )
     new_original_image(:, (missing_columns+1): original_size(1), :) = original_image;
     original_image = new_original_image;
 end
-importance_matrix = readtable([image, '/roi_map.csv'], 'ReadVariableNames',0 );
+
 importance_matrix = importance_matrix{:, :};
 
 
@@ -178,6 +178,5 @@ if (abs(original_size(1) - original_size(2)) > 0)
     compressed_image = compressed_image((max_size - original_size(1) + 1):max_size, (max_size - original_size(2) + 1):max_size, :);
 end
 imshow(uint8(compressed_image));
-imwrite(uint8(compressed_image), [image, '/compressed_image_ROI.png']);
-imwrite(uint8(compressed_image),  [image, '/compressed_image_ROI.jpg']);
+imwrite(uint8(compressed_image), '/compressed_image_ROI_first_method.png');
 
