@@ -57,8 +57,8 @@ We are going to use a convolutional network to obtain, for each pixel, a value b
 ### Example of importance matrix
 In this images we see, on the left the original image and on the right its corresponding *importance\_matrix*, represented through an heatmap.
 <p float="left">
-  <img src="images/overlayed_heatmap_zones_grid.png" width="300" />
-  <img src="images/overlayed_heatmap_grid.png" width="300" /> 
+  <img src="images/immagine_esempio_heatmap.jpg" width="300" />
+  <img src="images/overlayed_heatmap.png" width="300" /> 
 </p>
 
 
