@@ -200,7 +200,7 @@ In the following images we can see:
 </p>
 <p float="center">
   <img src="images/quality1.png" width="300" />
-  <img src="imagesquality5.png" width="300" /> 
+  <img src="images/quality5.png" width="300" /> 
 </p>
 <p float="center">
   <img src="images/quality8.png" width="300" />
